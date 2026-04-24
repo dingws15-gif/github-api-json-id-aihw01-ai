@@ -1,109 +1,164 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI 新闻聚合与中文翻译 - aihw01</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AI News</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-      :root {
-        --bg: #f5f7fb;
-        --card: #ffffff;
-        --line: #e8edf5;
-        --text: #1e293b;
-        --muted: #64748b;
-        --accent: #0f766e;
-      }
-      body {
-        margin: 0;
-        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-        background: linear-gradient(160deg, #f8fafc 0%, #eef6ff 100%);
-        color: var(--text);
-      }
-      .wrap {
-        max-width: 1020px;
-        margin: 36px auto;
-        padding: 0 20px;
-      }
-      .toolbar {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
-        margin-bottom: 18px;
-      }
-      button,
-      select {
-        border: 1px solid var(--line);
-        background: var(--card);
-        border-radius: 10px;
-        height: 40px;
-        padding: 0 14px;
-        color: var(--text);
-      }
-      button {
-        background: var(--accent);
-        color: #fff;
-        cursor: pointer;
-        border: none;
-      }
-      .meta {
-        color: var(--muted);
-        margin-bottom: 10px;
-      }
-      .list {
-        display: grid;
-        gap: 12px;
-      }
-      .item {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 14px;
-      }
-      .item h3 {
-        margin: 0 0 6px;
-        font-size: 16px;
-      }
-      .item p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 14px;
-      }
-      .item a {
-        color: #0b4dc7;
-        text-decoration: none;
-      }
-      .item a:hover {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <h1>AI 新闻聚合与中文翻译（aihw01）</h1>
-      <div class="toolbar">
-        <button id="loadBtn">刷新新闻</button>
-        <label>
-          每站抓取:
-          <select id="siteLimit">
-            <option value="2">2</option>
-            <option value="3" selected>3</option>
-            <option value="5">5</option>
-          </select>
-        </label>
-        <label>
-          总量:
-          <select id="totalLimit">
-            <option value="20">20</option>
-            <option value="40" selected>40</option>
-            <option value="80">80</option>
-          </select>
-        </label>
-      </div>
-      <div class="meta" id="meta"></div>
-      <div class="list" id="newsList"></div>
-    </div>
-    <script src="/app.js"></script>
-  </body>
-</html>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --muted: #666666;
+            --accent: #0f766e;
+            --border: #eeeeee;
+            --card-bg: #ffffff;
+        }
 
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121212;
+                --text: #e0e0e0;
+                --muted: #999999;
+                --accent: #2dd4bf;
+                --border: #222222;
+                --card-bg: #1e1e1e;
+            }
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        h1 { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+
+        #refreshBtn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-weight: 600;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        #refreshBtn:disabled { color: var(--muted); }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 8px;
+        }
+
+        .meta {
+            padding: 8px;
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .news-list { display: grid; gap: 8px; }
+
+        .news-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .news-item:active { background-color: var(--border); }
+
+        .news-item h3 {
+            margin: 0 0 4px 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .news-item .original-title {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-item .info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .news-item .details {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .news-item .link {
+            font-size: 0.72rem;
+            color: var(--accent);
+            word-break: break-all;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+
+        /* 隐藏滚动条但保留功能 */
+        ::-webkit-scrollbar { width: 0; background: transparent; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI News</h1>
+        <button id="refreshBtn">刷新</button>
+    </header>
+
+    <div class="container">
+        <div id="meta" class="meta">正在初始化...</div>
+        <div id="newsList" class="news-list"></div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+</body>
+</html>

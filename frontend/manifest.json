@@ -1,0 +1,17 @@
+{
+  "name": "AI News Aggregator",
+  "short_name": "AI News",
+  "description": "Stable and high-performance AI news aggregator.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

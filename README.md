@@ -1,6 +1,6 @@
-# aihw01 - AI 新闻抓取与中文翻译
+# aihw01 - AI 新闻抓取与中文翻译（Rust）
 
-这个项目实现了你要的功能：
+这个项目实现了你要的功能（Rust 后端）：
 - 聚合 AI 硬件/AI 行业新闻网站（使用你给的 JSON 源）
 - 优先抓取 RSS，失败时回退抓取网站首页标题
 - 调用开源翻译 API（默认 LibreTranslate 兼容接口）翻译成中文
@@ -10,36 +10,31 @@
 
 ```text
 backend/
-  app.py
   news_sources.json
 frontend/
   index.html
   app.js
-requirements.txt
+src/
+  main.rs
+Cargo.toml
 ```
 
 ## 运行
 
-1. 创建并激活虚拟环境
+1. 安装 Rust（如未安装）
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
+rustc --version
+cargo --version
 ```
 
-2. 安装依赖
+2. 启动服务
 
 ```powershell
-pip install -r requirements.txt
+cargo run
 ```
 
-3. 启动服务
-
-```powershell
-uvicorn backend.app:app --reload --host 0.0.0.0 --port 8000
-```
-
-4. 打开浏览器
+3. 打开浏览器
 
 - [http://localhost:8000](http://localhost:8000)
 
@@ -79,4 +74,3 @@ gh repo create aihw01 --public --source . --remote origin --push
 ```
 
 如果你要私有仓库，把 `--public` 改为 `--private`。
-

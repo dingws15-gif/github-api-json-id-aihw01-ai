@@ -2,4 +2,8 @@
 __pycache__/
 *.pyc
 .env
-
+target/
+rust.out.log
+rust.err.log
+rust-*.out.log
+rust-*.err.log
