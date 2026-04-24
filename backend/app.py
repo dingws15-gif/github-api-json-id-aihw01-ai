@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin
@@ -96,7 +96,17 @@ def parse_date(value: str | None) -> str:
 
 def fetch_from_feed(source: dict[str, str], per_site_limit: int) -> list[dict[str, str]]:
     feed_url = KNOWN_FEEDS.get(source["url"], source["url"])
-    parsed = feedparser.parse(feed_url)
+    try:
+        response = requests.get(
+            feed_url,
+            timeout=NEWS_TIMEOUT_SEC,
+            headers={"User-Agent": USER_AGENT},
+        )
+        response.raise_for_status()
+    except Exception:
+        return []
+
+    parsed = feedparser.parse(response.content)
     if not parsed.entries:
         return []
 
@@ -215,17 +225,24 @@ def get_sources() -> dict[str, Any]:
 def get_news(
     limit: int = Query(default=40, ge=1, le=200),
     per_site_limit: int = Query(default=3, ge=1, le=8),
+    max_sources: int = Query(default=32, ge=1, le=100),
     translate: bool = Query(default=True),
 ) -> dict[str, Any]:
     start_time = time.time()
-    sources = flatten_sources(load_sources())
+    sources = flatten_sources(load_sources())[:max_sources]
 
     collected = []
-    for source in sources:
-        rows = fetch_from_feed(source, per_site_limit)
-        if not rows:
-            rows = fetch_from_html(source, per_site_limit)
-        collected.extend(rows)
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        futures = [pool.submit(fetch_from_feed, source, per_site_limit) for source in sources]
+        for source, future in zip(sources, futures):
+            try:
+                rows = future.result()
+            except Exception:
+                rows = []
+            if not rows:
+                collected.extend(fetch_from_html(source, per_site_limit))
+            else:
+                collected.extend(rows)
 
     dedup = {}
     for row in collected:
@@ -237,14 +254,14 @@ def get_news(
     for row in items:
         row["title_zh"] = translate_to_chinese(row["title"]) if translate else row["title"]
 
-    def sort_key(news_item: dict[str, str]) -> datetime:
+    def sort_key(news_item: dict[str, str]) -> float:
         published = news_item.get("published") or ""
         if not published:
-            return datetime.min
+            return -1.0
         try:
-            return date_parser.parse(published)
+            return date_parser.parse(published).timestamp()
         except Exception:
-            return datetime.min
+            return -1.0
 
     items.sort(key=sort_key, reverse=True)
     items = items[:limit]
@@ -261,4 +278,3 @@ def get_news(
 
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
-
