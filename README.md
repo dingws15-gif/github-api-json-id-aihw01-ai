@@ -41,7 +41,24 @@ cargo run
 ## API
 
 - `GET /api/sources` 查看所有新闻源
-- `GET /api/news?translate=true&per_site_limit=3&limit=40` 获取新闻并翻译中文
+- `GET /api/news?translate=true&limit=40` 从本地缓存数据库读取新闻（前台不直连外网）
+- `GET /api/news/detail?url=<article_url>` 获取站内详情（先查 SQL，未命中才爬取+翻译并落库）
+
+## 后台定时更新与缓存
+
+服务启动后会在后台定时抓取新闻并写入 SQLite：
+
+- 数据库文件：`backend/news_cache.db`
+- 前端列表请求 `/api/news`（读取数据库）
+- 点击详情后请求 `/api/news/detail`（懒加载爬取，后续走缓存）
+
+可通过环境变量调节刷新策略：
+
+```powershell
+$env:NEWS_REFRESH_SEC="600"             # 刷新周期（秒）
+$env:NEWS_REFRESH_PER_SITE_LIMIT="4"    # 每站抓取条数
+$env:NEWS_REFRESH_MAX_SOURCES="32"      # 每轮抓取站点数
+```
 
 ## 开源翻译 API 配置
 

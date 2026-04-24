@@ -91,6 +91,9 @@
             display: block;
             text-decoration: none;
             color: inherit;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
         }
 
         .news-item:active { background-color: var(--border); }
@@ -127,10 +130,66 @@
             word-break: break-word;
         }
 
-        .news-item .link {
-            font-size: 0.72rem;
+        .detail-view {
+            display: none;
+            padding: 8px 4px 20px;
+        }
+
+        #backBtn {
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .detail-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            padding: 14px;
+        }
+
+        .detail-card h2 {
+            margin: 0 0 8px;
+            font-size: 1.15rem;
+            line-height: 1.35;
+        }
+
+        .detail-meta {
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            word-break: break-word;
+        }
+
+        .detail-block-title {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin: 14px 0 8px;
+            font-weight: 700;
+        }
+
+        .detail-content {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
+        .detail-link {
+            display: block;
+            margin-top: 12px;
+            font-size: 0.8rem;
             color: var(--accent);
             word-break: break-all;
+            text-decoration: none;
+        }
+
+        .detail-link:hover {
+            text-decoration: underline;
         }
 
         .loading {
@@ -152,6 +211,18 @@
     <div class="container">
         <div id="meta" class="meta">正在初始化...</div>
         <div id="newsList" class="news-list"></div>
+        <div id="detailView" class="detail-view">
+            <button id="backBtn" type="button">返回列表</button>
+            <div class="detail-card">
+                <h2 id="detailTitle">详情</h2>
+                <div id="detailMeta" class="detail-meta"></div>
+                <div class="detail-block-title">中文全文</div>
+                <div id="detailContentZh" class="detail-content"></div>
+                <div class="detail-block-title">原文内容</div>
+                <div id="detailContent" class="detail-content"></div>
+                <a id="detailLink" class="detail-link" href="#" target="_blank" rel="noopener noreferrer"></a>
+            </div>
+        </div>
     </div>
 
     <script src="/app.js"></script>

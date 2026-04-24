@@ -1,100 +1,69 @@
 const refreshBtn = document.getElementById("refreshBtn");
 const newsList = document.getElementById("newsList");
 const meta = document.getElementById("meta");
+const detailView = document.getElementById("detailView");
+const detailTitle = document.getElementById("detailTitle");
+const detailMeta = document.getElementById("detailMeta");
+const detailContentZh = document.getElementById("detailContentZh");
+const detailContent = document.getElementById("detailContent");
+const detailLink = document.getElementById("detailLink");
+const backBtn = document.getElementById("backBtn");
 
 const CACHE_KEY = "ai_news_cache";
-const zhTranslateCache = new Map();
 
 function safeHttpUrl(raw) {
     if (!raw) return "#";
     try {
         const u = new URL(raw, window.location.origin);
-        if (u.protocol === "http:" || u.protocol === "https:") {
-            return u.href;
-        }
+        if (u.protocol === "http:" || u.protocol === "https:") return u.href;
     } catch (e) {
         console.warn("Invalid URL:", raw, e);
     }
     return "#";
 }
 
+function createMetaText(item) {
+    const published = item.published ? new Date(item.published).toLocaleString() : "最近";
+    return `${item.source_name || "-"} ｜ ${published}`;
+}
+
 function renderItem(item) {
-    const a = document.createElement("a");
-    a.className = "news-item";
-    a.href = safeHttpUrl(item.url);
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
+    const card = document.createElement("button");
+    card.className = "news-item";
+    card.type = "button";
 
     const h3 = document.createElement("h3");
     h3.textContent = item.title_zh || item.title || "";
 
-    const originalTitle = document.createElement("div");
-    originalTitle.className = "original-title";
-    originalTitle.textContent = item.title || "";
+    const origin = document.createElement("div");
+    origin.className = "original-title";
+    origin.textContent = item.title || "";
 
     const info = document.createElement("div");
     info.className = "info";
-
-    const source = document.createElement("span");
-    source.textContent = item.source_name || "";
-
-    const date = document.createElement("span");
-    date.textContent = item.published ? new Date(item.published).toLocaleString() : "最近";
+    info.textContent = createMetaText(item);
 
     const details = document.createElement("div");
     details.className = "details";
     details.textContent = `分类: ${item.source_category || "-"} ｜ 关注: ${item.source_focus || "-"}`;
 
-    const link = document.createElement("div");
-    link.className = "link";
-    link.textContent = item.url || "";
-
-    info.appendChild(source);
-    info.appendChild(date);
-
-    a.appendChild(h3);
-    a.appendChild(originalTitle);
-    a.appendChild(info);
-    a.appendChild(details);
-    a.appendChild(link);
-    return a;
-}
-
-async function translateTitleFallback(text) {
-    if (!text) return text;
-    if (zhTranslateCache.has(text)) return zhTranslateCache.get(text);
-    try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=${encodeURIComponent(text)}`;
-        const res = await fetch(url);
-        if (!res.ok) return text;
-        const data = await res.json();
-        const translated = data?.[0]?.[0]?.[0] || text;
-        zhTranslateCache.set(text, translated);
-        return translated;
-    } catch {
-        return text;
-    }
-}
-
-async function fillMissingTranslations(items) {
-    const tasks = items.slice(0, 40).map(async (item) => {
-        if (!item?.title) return;
-        if (item.title_zh && item.title_zh !== item.title) return;
-        item.title_zh = await translateTitleFallback(item.title);
-    });
-    await Promise.all(tasks);
+    card.appendChild(h3);
+    card.appendChild(origin);
+    card.appendChild(info);
+    card.appendChild(details);
+    card.addEventListener("click", () => openDetail(item));
+    return card;
 }
 
 async function fetchNews(isInitial = false) {
     refreshBtn.disabled = true;
     refreshBtn.textContent = "抓取中...";
-    
+
     if (isInitial) {
         const cached = localStorage.getItem(CACHE_KEY);
         if (cached) {
             try {
-                const data = JSON.parse(cached);
-                displayNews(data, true);
+                displayNews(JSON.parse(cached), true);
             } catch (e) {
                 console.error("Cache parse error", e);
             }
@@ -105,8 +74,6 @@ async function fetchNews(isInitial = false) {
         const res = await fetch("/api/news?translate=true&limit=40");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-
-        await fillMissingTranslations(data.items || []);
         displayNews(data);
         localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         meta.textContent = `更新于 ${new Date().toLocaleTimeString()} · 共 ${data.total} 条`;
@@ -121,23 +88,56 @@ async function fetchNews(isInitial = false) {
 
 function displayNews(data, fromCache = false) {
     if (!fromCache) newsList.innerHTML = "";
-    
     const fragment = document.createDocumentFragment();
-    data.items.forEach(item => {
-        fragment.appendChild(renderItem(item));
-    });
-    
-    if (fromCache) {
-        newsList.innerHTML = ""; // Clear for final update if needed
-    }
+    (data.items || []).forEach((item) => fragment.appendChild(renderItem(item)));
+    if (fromCache) newsList.innerHTML = "";
     newsList.appendChild(fragment);
-    
-    if (fromCache) {
-        meta.textContent = "正在同步最新资讯...";
+    if (fromCache) meta.textContent = "正在同步最新资讯...";
+}
+
+function setDetailLoading(item) {
+    detailTitle.textContent = item.title_zh || item.title || "详情";
+    detailMeta.textContent = "加载中...";
+    detailContentZh.textContent = "正在抓取并翻译全文，请稍候...";
+    detailContent.textContent = "";
+    detailLink.href = safeHttpUrl(item.url);
+    detailLink.textContent = item.url || "";
+}
+
+function showDetailView() {
+    newsList.style.display = "none";
+    detailView.style.display = "block";
+}
+
+function showListView() {
+    detailView.style.display = "none";
+    newsList.style.display = "grid";
+}
+
+async function openDetail(item) {
+    showDetailView();
+    setDetailLoading(item);
+    try {
+        const url = encodeURIComponent(item.url || "");
+        const res = await fetch(`/api/news/detail?url=${url}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const detail = data.detail;
+
+        detailTitle.textContent = detail.title_zh || detail.title || "详情";
+        detailMeta.textContent = `${detail.source_name || "-"} ｜ ${detail.published ? new Date(detail.published).toLocaleString() : "最近"} ｜ ${data.from_cache ? "缓存命中" : "新抓取"}`;
+        detailContentZh.textContent = detail.content_zh || "暂无翻译内容";
+        detailContent.textContent = detail.content || "暂无原文内容";
+        detailLink.href = safeHttpUrl(detail.url);
+        detailLink.textContent = detail.url || "";
+    } catch (err) {
+        detailMeta.textContent = `加载失败: ${err.message}`;
+        detailContentZh.textContent = "";
+        detailContent.textContent = "";
     }
 }
 
 refreshBtn.addEventListener("click", () => fetchNews());
+backBtn.addEventListener("click", showListView);
 
-// Start
 fetchNews(true);

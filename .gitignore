@@ -7,3 +7,4 @@ rust.out.log
 rust.err.log
 rust-*.out.log
 rust-*.err.log
+backend/news_cache.db
