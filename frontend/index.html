@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 新闻聚合与中文翻译 - aihw01</title>
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --card: #ffffff;
+        --line: #e8edf5;
+        --text: #1e293b;
+        --muted: #64748b;
+        --accent: #0f766e;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: linear-gradient(160deg, #f8fafc 0%, #eef6ff 100%);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 1020px;
+        margin: 36px auto;
+        padding: 0 20px;
+      }
+      .toolbar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      button,
+      select {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 10px;
+        height: 40px;
+        padding: 0 14px;
+        color: var(--text);
+      }
+      button {
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        border: none;
+      }
+      .meta {
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .list {
+        display: grid;
+        gap: 12px;
+      }
+      .item {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .item h3 {
+        margin: 0 0 6px;
+        font-size: 16px;
+      }
+      .item p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .item a {
+        color: #0b4dc7;
+        text-decoration: none;
+      }
+      .item a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>AI 新闻聚合与中文翻译（aihw01）</h1>
+      <div class="toolbar">
+        <button id="loadBtn">刷新新闻</button>
+        <label>
+          每站抓取:
+          <select id="siteLimit">
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="5">5</option>
+          </select>
+        </label>
+        <label>
+          总量:
+          <select id="totalLimit">
+            <option value="20">20</option>
+            <option value="40" selected>40</option>
+            <option value="80">80</option>
+          </select>
+        </label>
+      </div>
+      <div class="meta" id="meta"></div>
+      <div class="list" id="newsList"></div>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>
+

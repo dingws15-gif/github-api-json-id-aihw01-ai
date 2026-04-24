@@ -1,0 +1,186 @@
+{
+  "id": "aihw01",
+  "ai_hardware_news": {
+    "chip_and_semiconductor": [
+      {
+        "name": "Tom's Hardware",
+        "focus": "GPU/CPU评测、AI硬件性能",
+        "url": "https://www.tomshardware.com/"
+      },
+      {
+        "name": "AnandTech",
+        "focus": "芯片架构深度分析（CPU/GPU/NPU）",
+        "url": "https://www.anandtech.com/"
+      },
+      {
+        "name": "SemiAnalysis",
+        "focus": "半导体产业与AI芯片（NVIDIA/AMD/ASIC）",
+        "url": "https://semianalysis.com/"
+      },
+      {
+        "name": "EE Times",
+        "focus": "电子工程与AI芯片设计",
+        "url": "https://www.eetimes.com/"
+      }
+    ],
+    "ai_infrastructure": [
+      {
+        "name": "ServeTheHome",
+        "focus": "服务器、数据中心、AI算力硬件",
+        "url": "https://www.servethehome.com/"
+      },
+      {
+        "name": "Data Center Dynamics",
+        "focus": "数据中心与AI基础设施",
+        "url": "https://www.datacenterdynamics.com/"
+      },
+      {
+        "name": "Next Platform",
+        "focus": "高性能计算（HPC）与AI基础设施",
+        "url": "https://www.nextplatform.com/"
+      }
+    ],
+    "ai_device_and_edge": [
+      {
+        "name": "Edge AI and Vision Alliance",
+        "focus": "边缘AI、嵌入式AI设备",
+        "url": "https://www.edge-ai-vision.com/"
+      },
+      {
+        "name": "Embedded.com",
+        "focus": "嵌入式系统与AI硬件",
+        "url": "https://www.embedded.com/"
+      },
+      {
+        "name": "Android Authority",
+        "focus": "手机AI芯片（NPU/SoC）",
+        "url": "https://www.androidauthority.com/"
+      }
+    ],
+    "company_official": [
+      {
+        "name": "NVIDIA Blog",
+        "focus": "GPU、CUDA、AI加速器",
+        "url": "https://blogs.nvidia.com/"
+      },
+      {
+        "name": "AMD Newsroom",
+        "focus": "GPU/CPU/AI加速器（MI系列）",
+        "url": "https://www.amd.com/en/newsroom"
+      },
+      {
+        "name": "Intel Newsroom",
+        "focus": "CPU、Gaudi、AI硬件",
+        "url": "https://www.intel.com/content/www/us/en/newsroom/home.html"
+      },
+      {
+        "name": "Qualcomm News",
+        "focus": "移动端AI芯片（Snapdragon）",
+        "url": "https://www.qualcomm.com/news"
+      }
+    ],
+    "community_and_fast_signal": [
+      {
+        "name": "Hacker News",
+        "focus": "AI硬件讨论与新发布",
+        "url": "https://news.ycombinator.com/"
+      },
+      {
+        "name": "Reddit r/hardware",
+        "focus": "硬件趋势与评测讨论",
+        "url": "https://www.reddit.com/r/hardware/"
+      },
+      {
+        "name": "Reddit r/MachineLearning",
+        "focus": "AI算力与训练硬件讨论",
+        "url": "https://www.reddit.com/r/MachineLearning/"
+      }
+    ]
+  },
+  "ai_news_websites": {
+    "comprehensive": [
+      {
+        "name": "MIT Technology Review",
+        "focus": "研究与产业趋势",
+        "url": "https://www.technologyreview.com/topic/artificial-intelligence/"
+      },
+      {
+        "name": "VentureBeat",
+        "focus": "AI商业化、创业、融资",
+        "url": "https://venturebeat.com/category/ai/"
+      },
+      {
+        "name": "Wired",
+        "focus": "科技与社会影响",
+        "url": "https://www.wired.com/tag/artificial-intelligence/"
+      },
+      {
+        "name": "AI News",
+        "focus": "AI行业新闻聚合",
+        "url": "https://www.artificialintelligence-news.com/"
+      },
+      {
+        "name": "AI Trends",
+        "focus": "企业级AI与行业应用",
+        "url": "https://www.aitrends.com/"
+      }
+    ],
+    "technical": [
+      {
+        "name": "OpenAI Blog",
+        "focus": "模型、API与设计思路",
+        "url": "https://openai.com/blog/"
+      },
+      {
+        "name": "Anthropic Blog",
+        "focus": "AI安全与对齐",
+        "url": "https://www.anthropic.com/news"
+      },
+      {
+        "name": "MarkTechPost",
+        "focus": "论文解读与前沿研究",
+        "url": "https://www.marktechpost.com/"
+      },
+      {
+        "name": "ScienceDaily AI",
+        "focus": "学术研究动态",
+        "url": "https://www.sciencedaily.com/news/computers_math/artificial_intelligence/"
+      }
+    ],
+    "aggregators": [
+      {
+        "name": "Feedly",
+        "focus": "AI新闻聚合与订阅",
+        "url": "https://feedly.com/"
+      },
+      {
+        "name": "AIWorldNext",
+        "focus": "AI公司与工具聚合",
+        "url": "https://aiworldnext.com/"
+      },
+      {
+        "name": "Substack",
+        "focus": "AI作者与深度分析",
+        "url": "https://substack.com/"
+      }
+    ],
+    "community": [
+      {
+        "name": "Reddit r/ArtificialIntelligence",
+        "focus": "社区讨论与趋势",
+        "url": "https://www.reddit.com/r/ArtificialIntelligence/"
+      },
+      {
+        "name": "Reddit r/MachineLearning",
+        "focus": "研究与工程讨论",
+        "url": "https://www.reddit.com/r/MachineLearning/"
+      },
+      {
+        "name": "Hacker News",
+        "focus": "技术社区与热点讨论",
+        "url": "https://news.ycombinator.com/"
+      }
+    ]
+  }
+}
+
